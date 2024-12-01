@@ -1,7 +1,7 @@
 const express = require('express');
 const sequelize = require('./src/database');
 const dotenv = require('dotenv');
-const userRoutes = require('./src/routes/userRoutes');
+const indexRoutes = require('./src/routes/index');
 
 dotenv.config();
 
@@ -23,7 +23,7 @@ sequelize
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
-app.use('/users', userRoutes);
+app.use('/api', indexRoutes);
 
 app.listen(PORT, () => {
   console.log(`User Service running on port ${PORT}`);
