@@ -32,7 +32,12 @@ exports.login = async (req, res) => {
 
     // Création du JWT
     const token = jwt.sign(
-      { id: user.id, username: user.username, email: user.email },
+      {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
       process.env.JWT_SECRET, // Utilisez la clé secrète pour signer le token
       { expiresIn: '1h' } // Le token expirera dans 1 heure
     );
@@ -44,7 +49,8 @@ exports.login = async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
-        fullName: user.fullName,
+        lastName: user.lastName,
+        role: user.role,
       },
       token, // Ajoutez le token JWT dans la réponse
     });
@@ -59,10 +65,10 @@ exports.login = async (req, res) => {
 
 exports.createUser = async (req, res) => {
   try {
-    const { username, email, password, fullName } = req.body;
+    const { username, email, password, lastName, role } = req.body;
 
     // Validation des données d'entrée
-    if (!username || !email || !password || !fullName) {
+    if (!username || !email || !password || !lastName || !role) {
       return res.status(400).json({ message: 'Tous les champs sont requis' });
     }
 
@@ -85,7 +91,8 @@ exports.createUser = async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      fullName,
+      lastName,
+      role,
     });
 
     // Réponse sans le mot de passe
@@ -93,8 +100,9 @@ exports.createUser = async (req, res) => {
       id: user.id,
       username: user.username,
       email: user.email,
-      fullName: user.fullName,
+      lastName: user.lastName,
       registrationDate: user.registrationDate,
+      role: user.role,
     };
 
     res.status(201).json({

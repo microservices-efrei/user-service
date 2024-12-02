@@ -26,7 +26,7 @@ exports.getUserProfile = async (req, res) => {
 exports.updateUserProfile = async (req, res) => {
   try {
     const { id } = req.params;
-    const { fullName, email } = req.body;
+    const { lastName, email, role } = req.body;
 
     // Trouver l'utilisateur
     const user = await User.findByPk(id);
@@ -36,7 +36,8 @@ exports.updateUserProfile = async (req, res) => {
     }
 
     // Mise à jour des champs
-    if (fullName) user.fullName = fullName;
+    if (lastName) user.lastName = lastName;
+    if (role) user.role = role;
     if (email) {
       // Vérifier si l'email est unique
       const existingUser = await User.findOne({
@@ -58,7 +59,8 @@ exports.updateUserProfile = async (req, res) => {
       id: user.id,
       username: user.username,
       email: user.email,
-      fullName: user.fullName,
+      lastName: user.lastName,
+      role: user.role,
     };
 
     res.json({

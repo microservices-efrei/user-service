@@ -17,6 +17,10 @@ const User = sequelize.define(
         len: [3, 50],
       },
     },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -29,10 +33,16 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    fullName: {
+
+    role: {
       type: DataTypes.STRING,
       allowNull: false,
+      defaultValue: 'customer',
+      validate: {
+        isIn: [['customer', 'admin']],
+      },
     },
+
     registrationDate: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
