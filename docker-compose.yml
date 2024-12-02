@@ -14,11 +14,13 @@ services:
       - DB_USER=root
       - DB_PASSWORD=password
       - DB_NAME=user_db
+      - JWT_SECRET= "syDqft24Tcc35Y1gepDphX69HwdJicfYQzVzvE3Oi2aYicLDmQE5XGvIqTD57Pac"
     depends_on:
       - postgres
     volumes:
       - ./src:/usr/src/app/src
-    command: npm run dev # Assurez-vous que vous avez un script "dev" dans package.json (pour démarrer en mode développement)
+    command: >
+      sh -c "npm install && node src/scripts/sync.js && npm run dev"
 
   # Service PostgreSQL
   postgres:
@@ -32,6 +34,17 @@ services:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@exemple.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres
 
 volumes:
   postgres_data:

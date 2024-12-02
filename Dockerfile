@@ -17,4 +17,5 @@ COPY . .
 EXPOSE 3001
 
 # Démarrer l'application
+
 CMD ["npm", "start"]
