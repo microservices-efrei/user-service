@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const { sendMessageToQueue } = require('../services/rabbitmqService');
 
 dotenv.config();
 
@@ -41,6 +42,17 @@ exports.login = async (req, res) => {
       process.env.JWT_SECRET, // Utilisez la clé secrète pour signer le token
       { expiresIn: '1h' } // Le token expirera dans 1 heure
     );
+
+    // Préparer le message à envoyer à RabbitMQ pour le borrowing-service
+    const message = {
+      userId: user.id,
+      username: user.username,
+      email: user.email,
+      isAuthenticated: true,
+    };
+
+    // Envoi du message à la queue de RabbitMQ pour informer borrowing-service
+    await sendMessageToQueue('user_check_queue', message);
 
     // Réponse avec le token (et les informations de l'utilisateur)
     res.json({
