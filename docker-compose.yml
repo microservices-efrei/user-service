@@ -3,6 +3,7 @@ version: '3.8'
 services:
   # Service Node.js
   app:
+    container_name: user-service
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,42 +11,18 @@ services:
       - '3001:3001'
     environment:
       - NODE_ENV=development
-      - DB_HOST=postgres
+      - DB_HOST=central-postgres # Nom du service PostgreSQL dans le compose central
       - DB_USER=root
       - DB_PASSWORD=password
       - DB_NAME=user_db
-      - JWT_SECRET= "syDqft24Tcc35Y1gepDphX69HwdJicfYQzVzvE3Oi2aYicLDmQE5XGvIqTD57Pac"
-    depends_on:
-      - postgres
+      - JWT_SECRET="syDqft24Tcc35Y1gepDphX69HwdJicfYQzVzvE3Oi2aYicLDmQE5XGvIqTD57Pac"
     volumes:
       - ./src:/usr/src/app/src
     command: >
       sh -c "npm install && node src/scripts/sync.js && npm run dev"
+    networks:
+      - backend # Réseau partagé défini globalement
 
-  # Service PostgreSQL
-  postgres:
-    image: postgres:14
-    container_name: postgres
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: user_db
-    ports:
-      - '5432:5432'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@exemple.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - '5050:80'
-    depends_on:
-      - postgres
-
-volumes:
-  postgres_data:
-    driver: local
+networks:
+  backend:
+    external: true # Assure-toi que le réseau "backend" est défini dans le central
