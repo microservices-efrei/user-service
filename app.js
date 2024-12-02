@@ -1,5 +1,5 @@
 const express = require('express');
-const sequelize = require('./src/database');
+const sequelize = require('./src/config/database');
 const dotenv = require('dotenv');
 const indexRoutes = require('./src/routes/index');
 
