@@ -49,10 +49,11 @@ exports.login = async (req, res) => {
       username: user.username,
       email: user.email,
       isAuthenticated: true,
+      jwt: token,
     };
 
     // Envoi du message à la queue de RabbitMQ pour informer borrowing-service
-    await sendMessageToQueue('user_check_queue', message);
+    await sendMessageToQueue('user_response_queue', message);
 
     // Réponse avec le token (et les informations de l'utilisateur)
     res.json({
