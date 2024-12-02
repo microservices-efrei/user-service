@@ -1,8 +1,10 @@
 // scripts/sync.js
 const sequelize = require('../config/database');
+require('../models/user');
 
 (async () => {
   try {
+    console.log(sequelize.models);
     await sequelize.sync({ force: true }); // force: true => Réinitialise les tables
     console.log('Base de données synchronisée !');
     process.exit();

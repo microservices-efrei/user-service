@@ -1,10 +1,29 @@
 version: '3.8'
 
 services:
+  # Service Node.js
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3001:3001'
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - DB_NAME=user_db
+    depends_on:
+      - postgres
+    volumes:
+      - ./src:/usr/src/app/src
+    command: npm run dev # Assurez-vous que vous avez un script "dev" dans package.json (pour démarrer en mode développement)
+
+  # Service PostgreSQL
   postgres:
     image: postgres:14
     container_name: postgres
-    restart: always
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: password
@@ -14,17 +33,6 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - '8080:80'
-
 volumes:
   postgres_data:
-
-
+    driver: local
