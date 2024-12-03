@@ -40,7 +40,7 @@ exports.login = async (req, res) => {
         role: user.role,
       },
       process.env.JWT_SECRET, // Utilisez la clé secrète pour signer le token
-      { expiresIn: '1h' } // Le token expirera dans 1 heure
+      { expiresIn: '24h' } // Le token expirera dans 1 heure
     );
 
     // Préparer le message à envoyer à RabbitMQ pour le borrowing-service
