@@ -18,7 +18,8 @@ services:
       - JWT_SECRET=${JWT_SECRET}
     volumes:
       - ./src:/usr/src/app/src
-  
+    command: >
+      sh -c "npm install && node src/scripts/sync.js && npm run dev"
     networks:
       - backend # Réseau partagé défini globalement
 

@@ -1,43 +1,6 @@
 /**
  * @swagger
- * components:
- *   schemas:
- *     User:
- *       type: object
- *       properties:
- *         id:
- *           type: string
- *           description: Unique identifier for the user (MongoDB ObjectId)
- *         username:
- *           type: string
- *           description: The username of the user
- *         email:
- *           type: string
- *           description: The email address of the user
- *         firstName:
- *           type: string
- *           description: First name of the user
- *         lastName:
- *           type: string
- *           description: Last name of the user
- *         createdAt:
- *           type: string
- *           format: date-time
- *           description: The date when the user was created
- *         updatedAt:
- *           type: string
- *           format: date-time
- *           description: The last time the user details were updated
- *       required:
- *         - username
- *         - email
- *         - firstName
- *         - lastName
- */
-
-/**
- * @swagger
- * /user/{id}:
+ * /users/{id}:
  *   get:
  *     summary: Get user by ID
  *     description: Retrieve user details by user ID.
@@ -48,8 +11,9 @@
  *         name: id
  *         schema:
  *           type: string
+ *           format: uuid
  *         required: true
- *         description: The ID of the user to retrieve
+ *         description: The UUID of the user to retrieve
  *     responses:
  *       '200':
  *         description: User details found successfully
@@ -57,6 +21,52 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
+ *       '404':
+ *         description: User not found
+ *       '500':
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Get all users
+ *     description: Retrieve the list of all users in the system.
+ *     tags:
+ *       - Users
+ *     responses:
+ *       '200':
+ *         description: A list of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       '500':
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     summary: Delete a user by ID
+ *     description: Delete a user from the system by their unique ID.
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         required: true
+ *         description: The UUID of the user to delete
+ *     responses:
+ *       '200':
+ *         description: User deleted successfully
  *       '404':
  *         description: User not found
  *       '500':
@@ -76,8 +86,9 @@
  *         name: id
  *         schema:
  *           type: string
+ *           format: uuid
  *         required: true
- *         description: The ID of the user to update
+ *         description: The UUID of the user to update
  *     requestBody:
  *       required: true
  *       content:
@@ -97,6 +108,15 @@
  *               lastName:
  *                 type: string
  *                 description: The updated last name of the user
+ *               password:
+ *                 type: string
+ *                 description: The updated password of the user (hashed in production)
+ *               role:
+ *                 type: string
+ *                 enum:
+ *                   - customer
+ *                   - admin
+ *                 description: The updated role of the user
  *     responses:
  *       '200':
  *         description: User updated successfully

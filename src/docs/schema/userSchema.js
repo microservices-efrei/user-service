@@ -5,7 +5,7 @@
  *     User:
  *       type: object
  *       properties:
- *         name:
+ *         username:
  *           type: string
  *           description: User's first name
  *         lastName:
